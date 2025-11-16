@@ -1,0 +1,16 @@
+{
+  "name": "ims",
+  "version": "1.0.0",
+  "description": "WebSocket to UDP relay for Industrial Monitoring System",
+  "main": "relay.js",
+  "scripts": {
+    "start": "node relay.js"
+  },
+  "keywords": [],
+  "author": "Amrutanshu Mishra",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.17.0"
+  }
+}
