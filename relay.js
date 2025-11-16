@@ -1,17 +1,26 @@
 import { WebSocketServer } from "ws";
+import http from "http";
 import dgram from "dgram";
 
-const UDP_HOST = "127.0.0.1"; 
+const UDP_HOST = "127.0.0.1";
 const UDP_PORT = 5683;
 
 const PORT = process.env.PORT || 10000;
 
-const wss = new WebSocketServer({
-  port: PORT,
-  host: "0.0.0.0"       // <-- REQUIRED FOR RENDER
+// HTTP server so Render detects an open port
+const server = http.createServer((req, res) => {
+  res.writeHead(200, {"Content-Type": "text/plain"});
+  res.end("WebSocket Relay OK");
 });
 
-console.log(`WebSocket → UDP Relay running on port ${PORT}`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`HTTP server listening on port ${PORT}`);
+});
+
+// WebSocket server attached to HTTP server
+const wss = new WebSocketServer({ server });
+
+console.log(`WebSocket → UDP Relay ready on port ${PORT}`);
 
 wss.on("connection", (ws) => {
   console.log("Client connected");
@@ -21,7 +30,7 @@ wss.on("connection", (ws) => {
 
     const udp = dgram.createSocket("udp4");
     udp.send(msg, UDP_PORT, UDP_HOST, (err) => {
-      if (err) console.error("UDP Send Error:", err);
+      if (err) console.error("UDP error:", err);
       udp.close();
     });
   });
