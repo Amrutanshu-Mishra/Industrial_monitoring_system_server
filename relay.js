@@ -1,17 +1,18 @@
-import WebSocket, { WebSocketServer } from "ws";
+import { WebSocketServer } from "ws";
 import dgram from "dgram";
 
 const UDP_HOST = "127.0.0.1";
 const UDP_PORT = 5683;
 
-const wss = new WebSocketServer({ port: process.env.PORT || 10000 });
+const PORT = process.env.PORT || 10000;
 
-console.log("WebSocket -> UDP Relay running");
+const wss = new WebSocketServer({ port: PORT });
+console.log(`WebSocket → UDP Relay running on port ${PORT}`);
 
-wss.on("connection", function (ws) {
+wss.on("connection", (ws) => {
   console.log("Client connected");
 
-  ws.on("message", function (msg) {
+  ws.on("message", (msg) => {
     console.log("WS → UDP:", msg.toString());
 
     const udp = dgram.createSocket("udp4");
