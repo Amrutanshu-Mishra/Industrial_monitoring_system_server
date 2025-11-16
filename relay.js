@@ -5,11 +5,13 @@ import dgram from "dgram";
 const UDP_HOST = "127.0.0.1";
 const UDP_PORT = 5683;
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT; // MUST use Render-assigned port ONLY
 
-// HTTP server so Render detects an open port
+console.log("ENV PORT =", PORT);
+
+// HTTP server so Render detects service
 const server = http.createServer((req, res) => {
-  res.writeHead(200, {"Content-Type": "text/plain"});
+  res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("WebSocket Relay OK");
 });
 
